@@ -1,6 +1,5 @@
-package com.alpha.poc;
+package com.alpha.poc.service.impl;
 
-import com.alpha.poc.service.impl.ImagesCompareServiceImpl;
 import org.junit.Test;
 
 import javax.imageio.ImageIO;
@@ -10,18 +9,30 @@ import java.io.IOException;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class ImageComparatorTest {
+public class ImagesCompareServiceImplTest {
+
+    private static final String IMAGE_GOOGLE = "google.png";
+    private static final String RED_IMAGE_GOOGLE = "google_red.png";
 
     @Test
-    public void shouldSuccessfullyCompareSameImages() throws IOException {
-        BufferedImage image = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("google.png"));
-        assertTrue(new ImagesCompareServiceImpl().isSameImage(image, image));
+    public void shouldSuccessfullyCompareImages() {
+        BufferedImage image = loadBufferedImage(IMAGE_GOOGLE);
+        assertTrue(new ImageCompareServiceImpl().isSameImage(image, image));
     }
 
     @Test
-    public void shouldFailCompareImages() throws IOException {
-        BufferedImage googleImage = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("google.png"));
-        BufferedImage redGoogleImage = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream("google_red.png"));
-        assertFalse(new ImagesCompareServiceImpl().isSameImage(googleImage, redGoogleImage));
+    public void shouldFailCompareImages() {
+        BufferedImage googleImage = loadBufferedImage(IMAGE_GOOGLE);
+        BufferedImage redGoogleImage = loadBufferedImage(RED_IMAGE_GOOGLE);
+        assertFalse(new ImageCompareServiceImpl().isSameImage(googleImage, redGoogleImage));
+    }
+
+    private BufferedImage loadBufferedImage(String image) {
+        try {
+            return ImageIO.read(
+                    this.getClass().getClassLoader().getResourceAsStream(image));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }
